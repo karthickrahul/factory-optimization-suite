@@ -548,3 +548,15 @@ th.num {
     transform: rotate(360deg);
   }
 }
+
+.split-3-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .split-3-2 {
+    grid-template-columns: 1fr;
+  }
+}
