@@ -4,14 +4,16 @@ import SpcPage from './modules/SpcPage'
 import BalancingPage from './modules/BalancingPage'
 
 const SimulationPage = lazy(() => import('./modules/SimulationPage'))
+const ForecastPage = lazy(() => import('./modules/ForecastPage'))
 
-type Tab = 'home' | 'spc' | 'balancing' | 'simulation'
+type Tab = 'home' | 'spc' | 'balancing' | 'simulation' | 'inventory'
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'spc', label: 'SPC & Capability' },
   { id: 'balancing', label: 'Line Balancing' },
   { id: 'simulation', label: 'Flow Simulator' },
+  { id: 'inventory', label: 'Demand & Inventory' },
 ]
 
 const fromHash = (): Tab => {
@@ -40,6 +42,13 @@ const MODULES: { id: Tab; icon: string; title: string; text: string; points: str
     title: 'Factory Flow Simulator',
     text: 'Simulate a line with buffers, breakdowns and variability, then test changes before buying anything.',
     points: ['Discrete-event engine, seeded and repeatable', '95% confidence intervals', 'Bottleneck detection', 'What-if scenarios'],
+  },
+  {
+    id: 'inventory',
+    icon: '📦',
+    title: 'Spare-Parts Demand & Inventory',
+    text: 'Forecast intermittent demand with classical methods and machine learning, then see how much stock each needs for a target fill rate.',
+    points: ['Real data: 2,509 car parts', 'Croston, SBA, TSB vs LightGBM', 'Stock vs fill-rate trade-off', 'Reorder plan CSV export'],
   },
 ]
 
@@ -81,7 +90,7 @@ export default function App() {
             <div className="hero">
               <h1>Industrial engineering tools you can use right now</h1>
               <p>
-                Three working tools for quality, assembly and production flow. Every module opens with sample data, so you can try it in one click, or load your own CSV. Everything runs in your browser: your data never leaves your computer.
+                Four working tools for quality, assembly, production flow and spare-parts inventory. Every module opens with sample data, so you can try it in one click, or load your own CSV. Everything runs in your browser: your data never leaves your computer.
               </p>
               <button className="btn primary" onClick={() => go('spc')}>
                 Try the SPC analyzer
@@ -125,9 +134,14 @@ export default function App() {
             <SimulationPage />
           </Suspense>
         )}
+        {tab === 'inventory' && (
+          <Suspense fallback={<p className="muted">Loading demand & inventory module…</p>}>
+            <ForecastPage />
+          </Suspense>
+        )}
       </main>
       <footer className="footer">
-        Built by Karthickk Rahul Srinivasan, M.Sc. Industrial Engineering, VŠB – Technical University of Ostrava. All calculations run locally in your browser. Sample data is synthetic.
+        Built by Karthickk Rahul Srinivasan, M.Sc. Industrial Engineering, VŠB – Technical University of Ostrava. All calculations run locally in your browser. Sample data is synthetic except the car-parts demand data (Hyndman et al., 2008).
       </footer>
     </>
   )
